@@ -18,7 +18,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 }*/
 
 int main(int argc, char** argv) {
+
+	Tekstury tekstury;
 	GLUTWindow window(&argc, argv);
 	window.init();
 	return 0;
 }
+
+

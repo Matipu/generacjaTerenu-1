@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Roslinki">
+      <UniqueIdentifier>{a38b781a-9cef-4287-93b3-5d8020077538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Roslinki">
+      <UniqueIdentifier>{78d6cb36-347c-4f81-9a6b-348be0f97797}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -30,23 +36,38 @@
     <ClCompile Include="GLUTWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Drzewo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Galaz.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GalazOpenGL.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Lights.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OperacjeNaWektorach.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SystemDrzew.cpp">
+    <ClCompile Include="Tekstury.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Drzewo.cpp">
+      <Filter>Source Files\Roslinki</Filter>
+    </ClCompile>
+    <ClCompile Include="Galaz.cpp">
+      <Filter>Source Files\Roslinki</Filter>
+    </ClCompile>
+    <ClCompile Include="GalazOpenGL.cpp">
+      <Filter>Source Files\Roslinki</Filter>
+    </ClCompile>
+    <ClCompile Include="MniejszaRoslinka.cpp">
+      <Filter>Source Files\Roslinki</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemDrzew.cpp">
+      <Filter>Source Files\Roslinki</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemMniejszejRoslinnosci.cpp">
+      <Filter>Source Files\Roslinki</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiatr.cpp">
+      <Filter>Source Files\Roslinki</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,26 +83,44 @@
     <ClInclude Include="GLUTWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Drzewo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Galaz.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GalazOpenGL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Lights.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OperacjeNaWektorach.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SystemDrzew.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Definicje.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tekstury.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Drzewo.h">
+      <Filter>Header Files\Roslinki</Filter>
+    </ClInclude>
+    <ClInclude Include="Galaz.h">
+      <Filter>Header Files\Roslinki</Filter>
+    </ClInclude>
+    <ClInclude Include="GalazOpenGL.h">
+      <Filter>Header Files\Roslinki</Filter>
+    </ClInclude>
+    <ClInclude Include="MniejszaRoslinka.h">
+      <Filter>Header Files\Roslinki</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemDrzew.h">
+      <Filter>Header Files\Roslinki</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemMniejszejRoslinnosci.h">
+      <Filter>Header Files\Roslinki</Filter>
+    </ClInclude>
+    <ClInclude Include="Wiatr.h">
+      <Filter>Header Files\Roslinki</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

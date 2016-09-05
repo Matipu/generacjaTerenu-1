@@ -2,7 +2,7 @@
 #include <math.h>
 class OperacjeNaWektorach
 {
-protected:
+public:
 	float* roznica3fv(float punkt1[3], float punkt2[3], float wynik[3])
 	{
 		for (int i = 0; i <3; i++) {

@@ -21,14 +21,26 @@ void SystemDrzew::generuj(float terrain[terrain_size][terrain_size])
 		terrain[terrain_size / 2][terrain_size / 2] * 0.1f - 0.01f,
 		(terrain_size / 2)*0.1f 
 	};
-	drzewa.push_back(new Drzewo(pozycja));
+	drzewa.push_back(new Drzewo(pozycja, Drzewo::NIEROZGALEZIONE));
 
 	float pozycja2[3] = { 
 		(terrain_size / 4)*0.1f,
 		terrain[terrain_size / 4][terrain_size / 2]*0.1f - 0.01f,
 		(terrain_size / 2)*0.1f 
 	};
-	drzewa.push_back(new Drzewo(pozycja2));
+	drzewa.push_back(new Drzewo(pozycja2, Drzewo::ROZGALEZIONE));
+
+
+	for (int i = 0; i < 15; i++) {
+		int x = rand() % 150;
+		int z = rand() % 150;
+		float * pozycjaTraw = new float[3];
+		pozycjaTraw[0] = (x)*0.1f;
+		pozycjaTraw[1] = terrain[x][z] * 0.1f - 0.01f;
+		pozycjaTraw[2] = (z)*0.1f;
+
+		drzewa.push_back(new Drzewo(pozycjaTraw, Drzewo::ROZGALEZIONE));
+	}
 }
 
 void SystemDrzew::Rysuj()

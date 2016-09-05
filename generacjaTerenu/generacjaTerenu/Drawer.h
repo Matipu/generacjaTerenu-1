@@ -1,6 +1,6 @@
 #pragma once
 #include <Windows.h>
-#include <gl/GL.h>
+#include "GL/glew.h"
 
 class Drawer
 {

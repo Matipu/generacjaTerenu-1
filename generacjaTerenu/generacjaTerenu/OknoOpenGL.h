@@ -1,7 +1,7 @@
 #pragma once
 #include "Okno.h"
 #include <Windows.h>
-#include<gl/GL.h>
+#include "GL/glew.h"
 #include "Drawer.h"
 
 class OknoOpenGL :

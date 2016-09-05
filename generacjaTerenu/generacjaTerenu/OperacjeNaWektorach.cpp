@@ -1,7 +1,6 @@
 #include "OperacjeNaWektorach.h"
 
 
-
 OperacjeNaWektorach::OperacjeNaWektorach()
 {
 }

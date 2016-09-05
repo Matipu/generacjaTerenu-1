@@ -25,6 +25,9 @@ bool GLUTWindow::firstRender;
 Lights* GLUTWindow::lights = new Lights();
 OperacjeNaWektorach* GLUTWindow::operacjeNaWektorach = new OperacjeNaWektorach();
 SystemDrzew* GLUTWindow::systemDrzew = new SystemDrzew();
+SystemMniejszejRoslinnosci* GLUTWindow::systemMniejszejRoslinnosci = new SystemMniejszejRoslinnosci();
+Wiatr* GLUTWindow::wiatr = new Wiatr();
+Shader* GLUTWindow::shader;
 
 //float GLUTWindow::smooth_factor;
 
@@ -54,7 +57,8 @@ GLUTWindow::GLUTWindow(int* argc_, char **argv_)
 	//smooth_factor = 0.11111f;
 }
 
-GLUTWindow::GLUTWindow(int posX, int posY, int width, int height, unsigned int mode, std::string name, int* argc_, char **argv_) {
+GLUTWindow::GLUTWindow(int posX, int posY, int width, int height, unsigned int mode, std::string name, int* argc_, char **argv_) 
+{
 	win_pos_x = posX;
 	win_pos_y = posY;
 	win_width = width;
@@ -168,7 +172,7 @@ void GLUTWindow::renderTerrain(unsigned int mode) {
 	case 1: // TODO: terrain rendering with triangle usage 
 		for (int x = 0; x < terrain_size - 1; ++x) {
 			for (int z = 0; z < terrain_size - 1; ++z) {
-				glColor3f(0.5f, 0.5f, 0.5f);
+				glColor3f(0.1f, 0.4f, 0.1f);
 				glBegin(GL_TRIANGLES);
 
 				float vector1[3] = { (GLfloat)x*0.1f, (GLfloat)terrain[x][z] * 0.1f, (GLfloat)z*0.1f };
@@ -197,21 +201,37 @@ void GLUTWindow::renderTerrain(unsigned int mode) {
 	case 2: //squares
 		for (int x = 0; x < terrain_size - 1; ++x) {
 			for (int z = 0; z < terrain_size - 1; ++z) {
-				glColor3f(0.5f, 0.5f, 0.5f);
+				glColor3f(0.4f, 0.6f, 0.4f);
 				const float scale = 0.1f;
+				
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, Tekstury::tekstura(3));
 				glBegin(GL_QUADS);
-
 				float vector1[3] = { x*scale, terrain[x][z] * scale, z*scale };
 				float vector2[3] = { x*scale, terrain[x][z + 1] * scale, (z + 1)*scale };
 				float vector3[3] = { (x + 1)*scale, terrain[x + 1][z + 1] * scale, (z + 1)*scale };
 				float vector4[3] = { (x + 1)*scale, terrain[x + 1][z] * scale, z*scale };
 				float wynik[3];
 				glNormal3fv(operacjeNaWektorach->jednostkowyWektorNormalny3fv(vector1, vector2, vector3, wynik));
+				glNormal3f(0, 1, 0);
 				glVertex3fv(vector1);
-				glVertex3fv(vector2);
-				glVertex3fv(vector3);
-				glVertex3fv(vector4);
+				glTexCoord2f(1.0f, 0.0f);
 
+				glNormal3f(0, 1, 0);
+				glVertex3fv(vector2);
+				glTexCoord2f(1.0f, 1.0f);
+
+				glNormal3f(0, 1, 0);
+				glVertex3fv(vector3);
+				glTexCoord2f(0.0f, 1.0f);
+
+				glNormal3f(0, 1, 0);
+				glVertex3fv(vector4);
+				glTexCoord2f(0.0f, 0.0f);
+
+
+
+				glDisable(GL_TEXTURE_2D);
 				glEnd();
 			}
 		}
@@ -220,6 +240,8 @@ void GLUTWindow::renderTerrain(unsigned int mode) {
 }
 
 void GLUTWindow::renderScene() {
+	shader->Use();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	lights->obsluzOswietlenie();
@@ -230,7 +252,7 @@ void GLUTWindow::renderScene() {
 			cameraPos.x+cameraFront.x, cameraPos.y+cameraFront.y, cameraPos.z+cameraFront.z,
 			cameraUp.x, cameraUp.y, cameraUp.z);
 
-	glColor3f(0.0f, 0.0f, 0.5f);
+	//glColor3f(0.0f, 0.0f, 0.5f);
 	//glBegin(GL_QUADS);
 	//	glVertex3f(0.0f, 0.1f, 0.0f);
 	//	glVertex3f(0.0f, 0.1f, terrain_size*0.1f);
@@ -238,11 +260,14 @@ void GLUTWindow::renderScene() {
 	//	glVertex3f(terrain_size*0.1f, 0.1f, 0.0f);
 	//glEnd();
 	glShadeModel(GL_SMOOTH);
-	glColor3f(0.5f, 0.5f, 0.5f);
-	renderTerrain(1);
-	glColor3f(0.5, 0.25, 0);
+	glColor3f(0.1f, 0.6f, 0.1f);
+	renderTerrain(2);
+
 	glShadeModel(GL_FLAT);
 	systemDrzew->Rysuj();
+	glColor3f(0.1f, 0.6f, 0.1f);
+	systemMniejszejRoslinnosci->rysuj();
+	wiatr->aktualizuj();
 	glutSwapBuffers();
 }
 
@@ -390,23 +415,37 @@ void GLUTWindow::smootherTerrain(unsigned int type) {
 
 }
 
+void timer_func(int n)           // NEW FUNCTION
+{
+	glutPostRedisplay();
+	glutTimerFunc(n, timer_func, n);
+}
+
+
 void GLUTWindow::init() {
+
 	srand(time(NULL));
 	//srand(0);
 	//for (int i = 0; i < 100; i++)
 		generateTerrain(1000, 1, 0.4f);
 		
-
 	smootherTerrain(0);
-	systemDrzew->generuj(terrain);
 	printTerrain();
-
 	glutInit(argc, argv);
+	//glew///////
+	glewExperimental = GL_TRUE;
+	
+
+	HDC hDC = GetDC(GetForegroundWindow());
+	HGLRC hRC = wglCreateContext(hDC);
+	wglMakeCurrent(hDC, hRC);
+	GLenum enuxDm = glewInit();
+	/////////////
 	glutInitDisplayMode(displ_mod);
 	glutInitWindowPosition(win_pos_x, win_pos_y);
 	glutInitWindowSize(win_width, win_height);
 	glutCreateWindow(win_name.c_str());
-	//glutEnterGameMode();
+			//glutEnterGameMode();
 	
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
@@ -415,13 +454,19 @@ void GLUTWindow::init() {
 	glutKeyboardUpFunc(keyReleased);
 	glutPassiveMotionFunc(processMouseMovement);
 	glutEntryFunc(whereIsCursor);
-
+	glutTimerFunc(100, timer_func, 40);
 	glutSetCursor(GLUT_CURSOR_NONE);
 	glEnable(GL_DEPTH_TEST);
 
 	glutIgnoreKeyRepeat(1);
 
-	glutPostRedisplay();
+	Tekstury::init();
+	systemDrzew->generuj(terrain);
+	systemMniejszejRoslinnosci->generuj(terrain);
+
+	shader = new Shader("Data/shaders/shader.vs", "Data/shaders/shader.frag");
+
+	//glutPostRedisplay();
 	glutMainLoop();
 }
 

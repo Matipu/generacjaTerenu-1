@@ -1,14 +1,17 @@
 #pragma once
 #include <string>
-#include <GL/freeglut.h>
 #include <ctime>
 #include <iostream>
 #include "glm.hpp"
+#include "GL/glew.h"
 #include "Lights.h"
 #include "OperacjeNaWektorach.h"
 #include "SystemDrzew.h"
 #include "Definicje.h"
-
+#include "SystemMniejszejRoslinnosci.h"
+#include "Tekstury.h"
+#include "Wiatr.h"
+#include "Shader.h"
 class GLUTWindow
 {
 	int win_pos_x, win_pos_y;
@@ -50,6 +53,10 @@ class GLUTWindow
 	static Lights * lights;
 	static OperacjeNaWektorach * operacjeNaWektorach;
 	static SystemDrzew * systemDrzew;
+	static SystemMniejszejRoslinnosci * systemMniejszejRoslinnosci;
+	static Wiatr * wiatr;
+	static Shader * shader;
+
 public:
 	GLUTWindow(int* , char**);
 	GLUTWindow(int , int , int , int , unsigned int , std::string , int* , char** );
