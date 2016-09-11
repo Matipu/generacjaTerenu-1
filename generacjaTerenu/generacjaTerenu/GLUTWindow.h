@@ -56,7 +56,7 @@ class GLUTWindow
 	static SystemMniejszejRoslinnosci * systemMniejszejRoslinnosci;
 	static Wiatr * wiatr;
 	static Shader * shader;
-
+	static void rysujNiebo();
 public:
 	GLUTWindow(int* , char**);
 	GLUTWindow(int , int , int , int , unsigned int , std::string , int* , char** );

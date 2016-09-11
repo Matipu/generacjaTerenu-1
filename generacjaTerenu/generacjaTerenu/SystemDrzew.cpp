@@ -31,7 +31,7 @@ void SystemDrzew::generuj(float terrain[terrain_size][terrain_size])
 	drzewa.push_back(new Drzewo(pozycja2, Drzewo::ROZGALEZIONE));
 
 
-	for (int i = 0; i < 15; i++) {
+	for (int i = 0; i < 20; i++) {
 		int x = rand() % 150;
 		int z = rand() % 150;
 		float * pozycjaTraw = new float[3];
@@ -48,5 +48,4 @@ void SystemDrzew::Rysuj()
 	for (int i = 0; i < drzewa.size(); i++){
 		drzewa[i]->Rysuj();
 	}
-	
 }

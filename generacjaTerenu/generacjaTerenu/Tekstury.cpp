@@ -1,24 +1,21 @@
 #include "Tekstury.h"
 
 GLuint Tekstury::trawa = -1;
-GLuint Tekstury::texture[5];
+GLuint Tekstury::texture[10];
 /**/
 AUX_RGBImageRec *LoadBMP(char *Filename) {				// Loads A Bitmap Image
 	FILE *File = NULL;									// File Handle
 
-	if (!Filename)										// Make Sure A Filename Was Given
-	{
+	if (!Filename) {										// Make Sure A Filename Was Given
 		return NULL;									// If Not Return NULL
 	}
 
 	File = fopen(Filename, "r");							// Check To See If The File Exists
 
-	if (File)											// Does The File Exist?
-	{
+	if (File) {											// Does The File Exist?
 		fclose(File);									// Close The Handle
 		return auxDIBImageLoad(Filename);				// Load The Bitmap And Return A Pointer
 	}
-
 	return NULL;										// If Load Failed Return NULL
 }
 
@@ -70,15 +67,10 @@ GLuint Tekstury::addAplpha(char *Filename, int i, float red, float green, float 
 
 	}
 
-
-
-	if (TextureImage[0])									// If Texture Exists
-	{
-		if (TextureImage[0]->data)							// If Texture Image Exists
-		{
+	if (TextureImage[0]){									// If Texture Exists
+		if (TextureImage[0]->data) {							// If Texture Image Exists
 			free(TextureImage[0]->data);					// Free The Texture Image Memory
 		}
-
 		free(TextureImage[0]);								// Free The Image Structure
 	}
 
@@ -88,17 +80,19 @@ GLuint Tekstury::addAplpha(char *Filename, int i, float red, float green, float 
 int Tekstury::LoadGLTextures()									// Load Bitmaps And Convert To Textures
 {
 	int Status = FALSE;									// Status Indicator
-	addAplpha("Data/trawa2.bmp", 0, 0 ,0 ,0 ,10);
-	addAplpha("Data/trawa.bmp", 1, 0, 0, 0, 10);
-	addAplpha("Data/trawa3.bmp", 2, 0, 0, 0, 10);
+	//addAplpha("Data/trawa4.bmp", 0, 255, 255, 255, 200);
+	//addAplpha("Data/trawa4.bmp", 1, 255, 255, 255, 200);
+	addAplpha("Data/trawa4.bmp", 2, 255, 255, 255, 200);
+	addAplpha("Data/trawa2.bmp", 0, 0, 0, 0, 20);
+	addAplpha("Data/trawa.bmp", 1, 0, 0, 0, 20);
+	//addAplpha("Data/trawa3.bmp", 2, 0, 0, 0, 20);
 	addAplpha("Data/grass.bmp", 3, 0, 0, 0, 10);
 	addAplpha("Data/liscie.bmp", 4, 255, 255, 255, 50);
+	addAplpha("Data/kora.bmp", 5, 255, 255, 255, 10);
+	addAplpha("Data/niebo.bmp", 6, 255, 255, 255, 0);
 	
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.666f);
+	glAlphaFunc(GL_GREATER, 0.5);
 
 	return Status;										// Return The Status
 }

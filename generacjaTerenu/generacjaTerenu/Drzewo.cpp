@@ -1,7 +1,7 @@
 #include "Drzewo.h"
 
 OperacjeNaWektorach Drzewo::operacjeNaWektorach;
-
+ const float Drzewo::skala = 2.6f;
 void dodaj(float obudowa[4][3], float pozycjaDrzewa[3])
 {
 	for (int i = 0; i < 4; i++) {
@@ -108,7 +108,7 @@ void Drzewo::przedGeneracjaKolejnejGalezi(float & maxDlugosc, float & szerokoscG
 		szerokoscGalezi /= 1.1;
 	}
 	if (typDrzewa == Drzewo::ROZGALEZIONE) {
-		maxDlugosc /= 2;
+		maxDlugosc /= 1.8;
 		szerokoscGalezi = szerokoscGalezi/4*3;
 	}
 }
@@ -156,7 +156,7 @@ void Drzewo::generujDrzewo(float maxDlugosc, Galaz* galaz, float szerokoscGalezi
 	iteracja--;
 }
 
-Drzewo::Drzewo(float pozycjaDrzewa[3], int typDrzewa)
+Drzewo::Drzewo(float pozycjaDrzewa[3], int typDrzew)
 {
 	this->typDrzewa = typDrzewa;
 	if (typDrzewa == Drzewo::NIEROZGALEZIONE){
@@ -171,8 +171,7 @@ Drzewo::Drzewo(float pozycjaDrzewa[3], int typDrzewa)
 	}
 	iteracja = 0;
 
-
-	float szerokoscGalezi = 0.04f;
+	float szerokoscGalezi = 0.04f*skala;
 	szerokoscPnia = szerokoscGalezi;
 	float obudowa[4][3];
 	stworzObudowe(obudowa, 0, szerokoscGalezi);
@@ -182,21 +181,31 @@ Drzewo::Drzewo(float pozycjaDrzewa[3], int typDrzewa)
 	float obrot[3] = { 0, 0, 0 };
 	pien = new GalazOpenGL(pozycjaDrzewa, szerokoscGalezi, nullptr, obudowa, obrot);
 
+
 	if (typDrzewa == Drzewo::ROZGALEZIONE) {
 		int tmp1 = this->maxIloscRozgalezien;
 		int tmp2 = this->maxIloscIteracji;
 		this->maxIloscRozgalezien = 1;
 		this->maxIloscIteracji = 1;
 		this->typDrzewa = Drzewo::NIEROZGALEZIONE;
-		generujDrzewo(0.4f, /*(*(*next)[0]->getNext())[0]*/ pien, szerokoscGalezi);
+		iloscPni = 3;
+		//for (int i = 0; i < 3; i++)
+		//{
+			generujDrzewo(0.12f*skala, pien, szerokoscGalezi);
+			generujDrzewo(0.12f*skala, (*(pien->getNext()))[0], szerokoscGalezi*0.95);
+			generujDrzewo(0.12f*skala, (*(*(pien->getNext()))[0]->getNext())[0], szerokoscGalezi*0.90);
+		//}
+
 		this->typDrzewa = Drzewo::ROZGALEZIONE;
 		this->maxIloscRozgalezien = tmp1;
 		this->maxIloscIteracji = tmp2;
 		
-		generujDrzewo(0.4f, (*(pien->getNext()))[0], szerokoscGalezi / 2);
+		generujDrzewo(0.2f*skala, (*(*(*(pien->getNext()))[0]->getNext())[0]->getNext())[0], szerokoscGalezi / 2);
+
+
 	}
 	else{
-		generujDrzewo(0.4f, /*(*(*next)[0]->getNext())[0]*/ pien, szerokoscGalezi);
+		generujDrzewo(0.4f*skala, pien, szerokoscGalezi);
 	}
 
 

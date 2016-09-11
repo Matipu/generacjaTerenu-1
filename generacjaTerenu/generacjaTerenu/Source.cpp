@@ -17,6 +17,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	return window.run();
 }*/
 
+ 
+
 int main(int argc, char** argv) {
 
 	Tekstury tekstury;

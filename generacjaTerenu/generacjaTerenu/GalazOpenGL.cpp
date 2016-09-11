@@ -17,18 +17,16 @@ GalazOpenGL::~GalazOpenGL(){
 
 }
 
+static int iteracja = -1;
 void GalazOpenGL::rysujGalezie(bool czyLiscie)
 {
+	if (iteracja == -1){
+		iteracja = 0;
+	}
 	glColor3f(0.2, 0.6f, 0.2);
-	if (czyLiscie ){
+	if (czyLiscie && iteracja > 3){
 		for (int i = 0; i < next.size(); i++){
-			//glTranslatef((pozycja[0] + next[i]->getPosition()[0])/2, (pozycja[1] + next[i]->getPosition()[1]) / 2, (pozycja[2] + next[i]->getPosition()[2]) / 2);
-			//glScalef(1, 0.6, 1);
-			//glutSolidSphere((1 / (grubosc * 1500)), 10, 10);
-			//glScalef(1, 1 / 0.6, 1);
-			//glTranslatef((pozycja[0] + next[i]->getPosition()[0]) / -2, (pozycja[1] + next[i]->getPosition()[1]) / -2, (pozycja[2] + next[i]->getPosition()[2]) / -2);
-
-			float scale = 0.1f;
+			float scale = 0.1f*Drzewo::skala;
 			glEnable(GL_TEXTURE_2D);
 
 			glBindTexture(GL_TEXTURE_2D, tekstury.tekstura(4));
@@ -40,9 +38,9 @@ void GalazOpenGL::rysujGalezie(bool czyLiscie)
 			float* sila = wiatr.pobierzSileWiatru(x, z);
 
 			float vector1[3] = { x - scale, y - scale, z - scale };
-			float vector2[3] = { x - scale + sila[0], y + scale, z - scale + sila[1] };
+			float vector2[3] = { x - scale + sila[0] * 0.1, y + scale, z - scale + sila[1] * 0.2 };
 			float vector3[3] = { x + scale, y - scale, z + scale };
-			float vector4[3] = { x + scale + sila[0], y + scale, z + scale + sila[1] };
+			float vector4[3] = { x + scale + sila[0] * 0.1, y + scale, z + scale + sila[1] * 0.2 };
 
 
 			glNormal3f(0, 1, 0);
@@ -63,8 +61,8 @@ void GalazOpenGL::rysujGalezie(bool czyLiscie)
 
 
 			float vector5[3] = { x - scale, y - scale, z + scale };
-			float vector6[3] = { x - scale + sila[0], y + scale, z + scale + sila[1] };
-			float vector7[3] = { x + scale + sila[0], y + scale, z - scale + sila[1] };
+			float vector6[3] = { x - scale + sila[0] * 0.1, y + scale, z + scale + sila[1] * 0.2 };
+			float vector7[3] = { x + scale + sila[0] * 0.1, y + scale, z - scale + sila[1] * 0.2 };
 			float vector8[3] = { x + scale, y - scale, z - scale };
 			glNormal3f(0, 1, 0);
 			glTexCoord2f(1.0f, 0.0f);
@@ -89,20 +87,30 @@ void GalazOpenGL::rysujGalezie(bool czyLiscie)
 
 		}
 
+
 	}
 	
 	for (int i = 0; i < next.size(); i++){
+		iteracja++;
 		next[i]->rysujGalezie(true);
 	}
+	if (iteracja == 0) {
+		iteracja = -1;
+	}
+	else
+		iteracja--;
 
 }
 void GalazOpenGL::Rysuj()
 {
-	glColor3f(0.5, 0.25, 0);
+	glColor3f(1, 1, 1);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_FRONT_AND_BACK);
-	glBegin(GL_QUADS);
 	
+	glEnable(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, tekstury.tekstura(Tekstury::TEXTURA_KORA));
+	glBegin(GL_QUADS);
 	if (prev){
 
 		float wynik[3];
@@ -137,6 +145,7 @@ void GalazOpenGL::Rysuj()
 	{
 		next[i]->Rysuj();
 	}
-
 	glEnd();
+	glDisable(GL_TEXTURE_2D);
+	
 }

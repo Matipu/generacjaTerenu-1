@@ -10,6 +10,7 @@ class SystemMniejszejRoslinnosci
 {
 	Tekstury tekstury;
 	vector<MniejszaRoslinka*> roslinki;
+	int losujTeksture();
 public:
 	SystemMniejszejRoslinnosci();
 	~SystemMniejszejRoslinnosci();

@@ -28,16 +28,16 @@ SystemDrzew* GLUTWindow::systemDrzew = new SystemDrzew();
 SystemMniejszejRoslinnosci* GLUTWindow::systemMniejszejRoslinnosci = new SystemMniejszejRoslinnosci();
 Wiatr* GLUTWindow::wiatr = new Wiatr();
 Shader* GLUTWindow::shader;
-
+float minimalnaWysokosc;
 //float GLUTWindow::smooth_factor;
 
 
 GLUTWindow::GLUTWindow(int* argc_, char **argv_)
 {
-	win_pos_x = -1;
-	win_pos_y = -1;
-	win_width = 800;
-	win_height = 600;
+	win_pos_x = 0;
+	win_pos_y = 0;
+	win_width = 1920;
+	win_height = 1080;
 	displ_mod = GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA;
 	win_name = "GLUT";
 	argc = argc_;
@@ -238,6 +238,114 @@ void GLUTWindow::renderTerrain(unsigned int mode) {
 		break;
 	}
 }
+void GLUTWindow::rysujNiebo(){
+	float odleglosc = 15.0f;
+	glColor3f(0.15f, 0.4f, 0.1f);
+	glBegin(GL_QUADS);
+	glVertex3f(0.0f - odleglosc, minimalnaWysokosc*0.1f, 0.0f - odleglosc);
+	glVertex3f(0.0f - odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1f + odleglosc);
+	glVertex3f(terrain_size*0.1f + odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1f + odleglosc);
+	glVertex3f(terrain_size*0.1f + odleglosc, minimalnaWysokosc*0.1f, 0.0f - odleglosc);
+	glEnd();
+	glColor3f(1, 1, 1);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, Tekstury::tekstura(Tekstury::TEXTURA_NIEBO));
+	glBegin(GL_QUADS);
+
+	float vector1[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f, 0.0 - odleglosc };
+	float vector2[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f, 0.0 - odleglosc };
+	float vector3[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f, 0.0 - odleglosc };
+	float vector4[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f, 0.0 - odleglosc };
+	float wynik[3];
+	glNormal3fv(operacjeNaWektorach->jednostkowyWektorNormalny3fv(vector1, vector2, vector3, wynik));
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector1);
+	glTexCoord2f(1.0f, 0.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector2);
+	glTexCoord2f(1.0f, 1.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector3);
+	glTexCoord2f(0.0f, 1.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector4);
+	glTexCoord2f(0.0f, 0.0f);
+
+
+	static float xD = 0.01;
+	xD++;
+	float vector13[3] = { 0.0 - odleglosc , minimalnaWysokosc*0.1f, 0.0 - odleglosc };
+	float vector23[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1 + odleglosc };
+	float vector33[3] = { 0.0 - odleglosc , minimalnaWysokosc*0.1f + terrain_size*0.1f,  terrain_size*0.1 + odleglosc };
+	float vector43[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f,  0.0 - odleglosc };
+	float wynik3[3];
+	glNormal3fv(operacjeNaWektorach->jednostkowyWektorNormalny3fv(vector13, vector23, vector33, wynik3));
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector13);
+	glTexCoord2f(1.0f, 0.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector23);
+	glTexCoord2f(1.0f, 1.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector33);
+	glTexCoord2f(0.0f, 1.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector43);
+	glTexCoord2f(0.0f, 0.0f);
+
+	float vector12[3] = { terrain_size*0.1 + odleglosc , minimalnaWysokosc*0.1f, 0.0 - odleglosc };
+	float vector22[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1 + odleglosc };
+	float vector32[3] = { terrain_size*0.1 + odleglosc , minimalnaWysokosc*0.1f + terrain_size*0.1f,  terrain_size*0.1 + odleglosc };
+	float vector42[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f,  0.0 - odleglosc };
+	float wynik2[3];
+	glNormal3fv(operacjeNaWektorach->jednostkowyWektorNormalny3fv(vector12, vector22, vector32, wynik2));
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector12);
+	glTexCoord2f(1.0f, 0.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector22);
+	glTexCoord2f(1.0f, 1.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector32);
+	glTexCoord2f(0.0f, 1.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector42);
+	glTexCoord2f(0.0f, 0.0f);
+
+
+	float vector14[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1 + odleglosc };
+	float vector24[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1 + odleglosc };
+	float vector34[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f, terrain_size*0.1 + odleglosc };
+	float vector44[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f, terrain_size*0.1 + odleglosc };
+	float wynik4[3];
+	glNormal3fv(operacjeNaWektorach->jednostkowyWektorNormalny3fv(vector14, vector24, vector34, wynik4));
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector14);
+	glTexCoord2f(1.0f, 0.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector24);
+	glTexCoord2f(1.0f, 1.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector34);
+	glTexCoord2f(0.0f, 1.0f);
+
+	glNormal3f(0, 1, 0);
+	glVertex3fv(vector44);
+	glTexCoord2f(0.0f, 0.0f);
+
+
+}
 
 void GLUTWindow::renderScene() {
 	shader->Use();
@@ -251,14 +359,17 @@ void GLUTWindow::renderScene() {
 	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z,
 			cameraPos.x+cameraFront.x, cameraPos.y+cameraFront.y, cameraPos.z+cameraFront.z,
 			cameraUp.x, cameraUp.y, cameraUp.z);
-
+	//WODA! XD
 	//glColor3f(0.0f, 0.0f, 0.5f);
 	//glBegin(GL_QUADS);
-	//	glVertex3f(0.0f, 0.1f, 0.0f);
-	//	glVertex3f(0.0f, 0.1f, terrain_size*0.1f);
-	//	glVertex3f(terrain_size*0.1f, 0.1f, terrain_size*0.1f);
-	//	glVertex3f(terrain_size*0.1f, 0.1f, 0.0f);
+	//	glVertex3f(0.0f, minimalnaWysokosc*0.1f + 0.3, 0.0f);
+	//	glVertex3f(0.0f, minimalnaWysokosc*0.1f + 0.3, terrain_size*0.1f);
+	//	glVertex3f(terrain_size*0.1f, minimalnaWysokosc*0.1f + 0.3, terrain_size*0.1f);
+	//	glVertex3f(terrain_size*0.1f, minimalnaWysokosc*0.1f + 0.3, 0.0f);
 	//glEnd();
+	
+
+	rysujNiebo();
 	glShadeModel(GL_SMOOTH);
 	glColor3f(0.1f, 0.6f, 0.1f);
 	renderTerrain(2);
@@ -415,7 +526,7 @@ void GLUTWindow::smootherTerrain(unsigned int type) {
 
 }
 
-void timer_func(int n)           // NEW FUNCTION
+void timer_func(int n)
 {
 	glutPostRedisplay();
 	glutTimerFunc(n, timer_func, n);
@@ -434,7 +545,7 @@ void GLUTWindow::init() {
 	glutInit(argc, argv);
 	//glew///////
 	glewExperimental = GL_TRUE;
-	
+
 
 	HDC hDC = GetDC(GetForegroundWindow());
 	HGLRC hRC = wglCreateContext(hDC);
@@ -465,7 +576,15 @@ void GLUTWindow::init() {
 	systemMniejszejRoslinnosci->generuj(terrain);
 
 	shader = new Shader("Data/shaders/shader.vs", "Data/shaders/shader.frag");
-
+	minimalnaWysokosc = terrain[0][0];
+	for (int i = 0; i < 150; i++) {
+		for (int j = 0; j < 150; j++) {
+			if (minimalnaWysokosc > terrain[i][j]) {
+				minimalnaWysokosc = terrain[i][j];
+			}
+		}
+	}
+	
 	//glutPostRedisplay();
 	glutMainLoop();
 }

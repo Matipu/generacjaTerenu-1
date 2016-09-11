@@ -12,6 +12,7 @@ class Drzewo
 public:
 	static const int ROZGALEZIONE = 0;
 	static const int NIEROZGALEZIONE = 1;
+	static const float skala;
 protected:
 	int maxIloscIteracji = 4;
 	int iteracja;
@@ -21,6 +22,8 @@ protected:
 	int maxIloscRozgalezien;
 	int typDrzewa;
 	Galaz * pien;
+	int iloscPni;
+	
 	void generujDrzewo(float maxDlugosc, Galaz* galaz, float szerokoscGalezi);
 	static OperacjeNaWektorach operacjeNaWektorach;
 	void stworzObudowe(float obudowa[4][3], float wysokosc, float szerokoscPnia);

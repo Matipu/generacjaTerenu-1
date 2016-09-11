@@ -6,6 +6,7 @@
 #include "Galaz.h"
 #include "OperacjeNaWektorach.h"
 #include "Wiatr.h"
+#include "Drzewo.h"
 class GalazOpenGL : public Galaz
 {
 	float obrot[3];
