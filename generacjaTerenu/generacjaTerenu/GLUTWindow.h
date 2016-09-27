@@ -12,6 +12,7 @@
 #include "Tekstury.h"
 #include "Wiatr.h"
 #include "Shader.h"
+#include "River.h"
 class GLUTWindow
 {
 	int win_pos_x, win_pos_y;
@@ -48,14 +49,16 @@ class GLUTWindow
 	static float moveSpeedUpDown;
 	//terrain
 	static float terrain[terrain_size][terrain_size];
+	static float WysokoscMIN, WysokoscMAX;
+	static int MIN_X, MIN_Z, MAX_X, MAX_Z;
 	static void printTerrain();
-
 	static Lights * lights;
 	static OperacjeNaWektorach * operacjeNaWektorach;
 	static SystemDrzew * systemDrzew;
 	static SystemMniejszejRoslinnosci * systemMniejszejRoslinnosci;
 	static Wiatr * wiatr;
 	static Shader * shader;
+	static River * river;
 	static void rysujNiebo();
 public:
 	GLUTWindow(int* , char**);

@@ -1,5 +1,6 @@
 #pragma once
 #include "GL/glew.h"
+#include "Definicje.h"
 #include <math.h>
 #include "Wiatr.h"
 #include <stdlib.h>

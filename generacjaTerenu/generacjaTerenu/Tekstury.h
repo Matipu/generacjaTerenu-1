@@ -16,6 +16,9 @@ public:
 	const static int TEXTURA_LISCIE = 4;
 	const static int TEXTURA_KORA = 5;
 	const static int TEXTURA_NIEBO = 6;
+	const static int TEXTURA_ZIEMIA = 7;
+	const static int TEXTURA_WODA = 8;
+	const static int TEXTURA_WODA2 = 9;
 	static GLuint	texture[10];
 	static GLuint trawa;
 public:

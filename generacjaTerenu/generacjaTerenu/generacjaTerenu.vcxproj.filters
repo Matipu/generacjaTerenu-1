@@ -69,6 +69,15 @@
     <ClCompile Include="Wiatr.cpp">
       <Filter>Source Files\Roslinki</Filter>
     </ClCompile>
+    <ClCompile Include="RiverPoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RiverPath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="River.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Okno.h">
@@ -122,5 +131,17 @@
     <ClInclude Include="Wiatr.h">
       <Filter>Header Files\Roslinki</Filter>
     </ClInclude>
+    <ClInclude Include="RiverPoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RiverPath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="River.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@ void Drawer::drawTriangle()
 	glVertex3f(1, 1, 0);
 
 	glEnd();
+
 }
 void Drawer::drawRectangle(float x, float y, float z)
 {

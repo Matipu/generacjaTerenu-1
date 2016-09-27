@@ -15,6 +15,6 @@ public:
 	SystemMniejszejRoslinnosci();
 	~SystemMniejszejRoslinnosci();
 	void rysuj();
-	void generuj(float terrain[terrain_size][terrain_size]);
+	void generuj(float terrain[terrain_size][terrain_size], bool riverMask[terrain_size][terrain_size]);
 };
 

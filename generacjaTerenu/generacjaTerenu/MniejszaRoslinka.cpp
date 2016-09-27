@@ -1,5 +1,6 @@
 #include "MniejszaRoslinka.h"
 
+
 Wiatr MniejszaRoslinka::wiatr;
 
 MniejszaRoslinka::MniejszaRoslinka(float x, float y, float z, long tekstura, float scale):tekstura(tekstura)
@@ -9,9 +10,9 @@ MniejszaRoslinka::MniejszaRoslinka(float x, float y, float z, long tekstura, flo
 	pozycja[1] = y; 
 	pozycja[2] = z;
 	
-	this->scaleX = scale * 0.6;
-	this->scaleY = scale* 0.6;
-	this->scaleZ = scale * 0.6;
+	this->scaleX = scale*terrain_scale;
+	this->scaleY = scale*terrain_scale;
+	this->scaleZ = scale*terrain_scale;
 
 	this->maxWychylenie = new float[2];
 	maxWychylenie[0] = 0.1;

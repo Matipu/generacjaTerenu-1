@@ -90,7 +90,10 @@ int Tekstury::LoadGLTextures()									// Load Bitmaps And Convert To Textures
 	addAplpha("Data/liscie.bmp", 4, 255, 255, 255, 50);
 	addAplpha("Data/kora.bmp", 5, 255, 255, 255, 10);
 	addAplpha("Data/niebo.bmp", 6, 255, 255, 255, 0);
-	
+	addAplpha("Data/ziemia.bmp", 7, 255, 255, 255, 50);
+	addAplpha("Data/woda.bmp", 8, 255, 255, 255, 140);
+	addAplpha("Data/woda2.bmp", 9, 255, 255, 255, 140);
+
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.5);
 

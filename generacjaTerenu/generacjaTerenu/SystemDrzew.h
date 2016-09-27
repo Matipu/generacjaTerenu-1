@@ -8,7 +8,7 @@ class SystemDrzew
 public:
 	SystemDrzew();
 	~SystemDrzew();
-	void generuj(float terrain[terrain_size][terrain_size]);
+	void generuj(float terrain[terrain_size][terrain_size], bool RiverMask[terrain_size][terrain_size]);
 	void Rysuj();
 };
 

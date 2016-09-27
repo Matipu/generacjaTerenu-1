@@ -5,6 +5,12 @@ glm::vec3 GLUTWindow::cameraFront;
 glm::vec3 GLUTWindow::cameraUp;
 
 float GLUTWindow::terrain[terrain_size][terrain_size];
+float GLUTWindow::WysokoscMIN;
+float GLUTWindow::WysokoscMAX;
+int GLUTWindow::MIN_X;
+int GLUTWindow::MIN_Z;
+int GLUTWindow::MAX_X;
+int GLUTWindow::MAX_Z;
 
 float GLUTWindow::lastX;
 float GLUTWindow::lastY;
@@ -22,13 +28,13 @@ float GLUTWindow::moveSpeedUpDown;
 bool GLUTWindow::isFirstMouse;
 bool GLUTWindow::firstRender;
 
+River* GLUTWindow::river;
 Lights* GLUTWindow::lights = new Lights();
 OperacjeNaWektorach* GLUTWindow::operacjeNaWektorach = new OperacjeNaWektorach();
 SystemDrzew* GLUTWindow::systemDrzew = new SystemDrzew();
 SystemMniejszejRoslinnosci* GLUTWindow::systemMniejszejRoslinnosci = new SystemMniejszejRoslinnosci();
 Wiatr* GLUTWindow::wiatr = new Wiatr();
 Shader* GLUTWindow::shader;
-float minimalnaWysokosc;
 //float GLUTWindow::smooth_factor;
 
 
@@ -159,8 +165,8 @@ void GLUTWindow::printTerrain() {
 void GLUTWindow::renderTerrain(unsigned int mode) {
 	switch (mode) {
 	case 0: //dots
-		for (int x = 0; x < terrain_size; ++x) {
-			for (int z = 0; z < terrain_size; ++z) {
+		for (int x = 0; x < terrain_size; x++) {
+			for (int z = 0; z < terrain_size; z ++) {
 				glColor3f(0.0f, 1.0f, 0.0f);
 				glScalef(1.5f, 1.5f, 1.5f);
 				glBegin(GL_POINTS);
@@ -202,31 +208,50 @@ void GLUTWindow::renderTerrain(unsigned int mode) {
 		for (int x = 0; x < terrain_size - 1; ++x) {
 			for (int z = 0; z < terrain_size - 1; ++z) {
 				glColor3f(0.4f, 0.6f, 0.4f);
-				const float scale = 0.1f;
-				
+				const float scale = terrain_scale;
+				bool korytoRzeki = false;
+				int iloscPol = 0;
+				for(int m = x; m<=x+1; m++)
+					for (int n = z; n <= z + 1; n++)
+					{
+						if (n == -1 && m == -1 && n == terrain_size && m == terrain_size) continue;
+						if (river->RiverMask[m][n])
+							iloscPol++;
+					}
+				if (iloscPol >=1 )
+					korytoRzeki = true;
 				glEnable(GL_TEXTURE_2D);
-				glBindTexture(GL_TEXTURE_2D, Tekstury::tekstura(3));
+				if(korytoRzeki)
+					glBindTexture(GL_TEXTURE_2D, Tekstury::tekstura(7));
+				else
+					glBindTexture(GL_TEXTURE_2D, Tekstury::tekstura(3));
 				glBegin(GL_QUADS);
 				float vector1[3] = { x*scale, terrain[x][z] * scale, z*scale };
 				float vector2[3] = { x*scale, terrain[x][z + 1] * scale, (z + 1)*scale };
 				float vector3[3] = { (x + 1)*scale, terrain[x + 1][z + 1] * scale, (z + 1)*scale };
 				float vector4[3] = { (x + 1)*scale, terrain[x + 1][z] * scale, z*scale };
 				float wynik[3];
-				glNormal3fv(operacjeNaWektorach->jednostkowyWektorNormalny3fv(vector1, vector2, vector3, wynik));
+
 				glNormal3f(0, 1, 0);
 				glVertex3fv(vector1);
+				if (korytoRzeki || terrain_texture)
 				glTexCoord2f(1.0f, 0.0f);
 
 				glNormal3f(0, 1, 0);
 				glVertex3fv(vector2);
+				if (korytoRzeki || terrain_texture)
 				glTexCoord2f(1.0f, 1.0f);
 
 				glNormal3f(0, 1, 0);
 				glVertex3fv(vector3);
+				if (korytoRzeki || terrain_texture)
+
 				glTexCoord2f(0.0f, 1.0f);
 
 				glNormal3f(0, 1, 0);
 				glVertex3fv(vector4);
+				if (korytoRzeki || terrain_texture)
+
 				glTexCoord2f(0.0f, 0.0f);
 
 
@@ -240,22 +265,24 @@ void GLUTWindow::renderTerrain(unsigned int mode) {
 }
 void GLUTWindow::rysujNiebo(){
 	float odleglosc = 15.0f;
+	float obnizenie = WysokoscMIN*terrain_scale - 1.0f;
+
 	glColor3f(0.15f, 0.4f, 0.1f);
-	glBegin(GL_QUADS);
-	glVertex3f(0.0f - odleglosc, minimalnaWysokosc*0.1f, 0.0f - odleglosc);
-	glVertex3f(0.0f - odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1f + odleglosc);
-	glVertex3f(terrain_size*0.1f + odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1f + odleglosc);
-	glVertex3f(terrain_size*0.1f + odleglosc, minimalnaWysokosc*0.1f, 0.0f - odleglosc);
-	glEnd();
+	/*glBegin(GL_QUADS);
+	glVertex3f(0.0f - odleglosc, obnizenie, 0.0f - odleglosc);
+	glVertex3f(0.0f - odleglosc, obnizenie, terrain_size*0.1f + odleglosc);
+	glVertex3f(terrain_size*0.1f + odleglosc, obnizenie, terrain_size*0.1f + odleglosc);
+	glVertex3f(terrain_size*0.1f + odleglosc, obnizenie, 0.0f - odleglosc);
+	glEnd();*/
 	glColor3f(1, 1, 1);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, Tekstury::tekstura(Tekstury::TEXTURA_NIEBO));
 	glBegin(GL_QUADS);
 
-	float vector1[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f, 0.0 - odleglosc };
-	float vector2[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f, 0.0 - odleglosc };
-	float vector3[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f, 0.0 - odleglosc };
-	float vector4[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f, 0.0 - odleglosc };
+	float vector1[3] = { 0.0 - odleglosc, obnizenie, 0.0 - odleglosc };
+	float vector2[3] = { terrain_size*terrain_scale + odleglosc, obnizenie, 0.0 - odleglosc };
+	float vector3[3] = { terrain_size*terrain_scale + odleglosc, obnizenie + terrain_size*terrain_scale, 0.0 - odleglosc };
+	float vector4[3] = { 0.0 - odleglosc, obnizenie + terrain_size*terrain_scale, 0.0 - odleglosc };
 	float wynik[3];
 	glNormal3fv(operacjeNaWektorach->jednostkowyWektorNormalny3fv(vector1, vector2, vector3, wynik));
 	glNormal3f(0, 1, 0);
@@ -277,10 +304,10 @@ void GLUTWindow::rysujNiebo(){
 
 	static float xD = 0.01;
 	xD++;
-	float vector13[3] = { 0.0 - odleglosc , minimalnaWysokosc*0.1f, 0.0 - odleglosc };
-	float vector23[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1 + odleglosc };
-	float vector33[3] = { 0.0 - odleglosc , minimalnaWysokosc*0.1f + terrain_size*0.1f,  terrain_size*0.1 + odleglosc };
-	float vector43[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f,  0.0 - odleglosc };
+	float vector13[3] = { 0.0 - odleglosc , obnizenie, 0.0 - odleglosc };
+	float vector23[3] = { 0.0 - odleglosc, obnizenie, terrain_size*terrain_scale + odleglosc };
+	float vector33[3] = { 0.0 - odleglosc , obnizenie + terrain_size*terrain_scale,  terrain_size*terrain_scale + odleglosc };
+	float vector43[3] = { 0.0 - odleglosc, obnizenie + terrain_size*terrain_scale,  0.0 - odleglosc };
 	float wynik3[3];
 	glNormal3fv(operacjeNaWektorach->jednostkowyWektorNormalny3fv(vector13, vector23, vector33, wynik3));
 	glNormal3f(0, 1, 0);
@@ -299,10 +326,10 @@ void GLUTWindow::rysujNiebo(){
 	glVertex3fv(vector43);
 	glTexCoord2f(0.0f, 0.0f);
 
-	float vector12[3] = { terrain_size*0.1 + odleglosc , minimalnaWysokosc*0.1f, 0.0 - odleglosc };
-	float vector22[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1 + odleglosc };
-	float vector32[3] = { terrain_size*0.1 + odleglosc , minimalnaWysokosc*0.1f + terrain_size*0.1f,  terrain_size*0.1 + odleglosc };
-	float vector42[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f,  0.0 - odleglosc };
+	float vector12[3] = { terrain_size*terrain_scale + odleglosc , obnizenie, 0.0 - odleglosc };
+	float vector22[3] = { terrain_size*terrain_scale + odleglosc, obnizenie, terrain_size*terrain_scale + odleglosc };
+	float vector32[3] = { terrain_size*terrain_scale + odleglosc , obnizenie + terrain_size*terrain_scale,  terrain_size*terrain_scale + odleglosc };
+	float vector42[3] = { terrain_size*terrain_scale + odleglosc, obnizenie + terrain_size*terrain_scale,  0.0 - odleglosc };
 	float wynik2[3];
 	glNormal3fv(operacjeNaWektorach->jednostkowyWektorNormalny3fv(vector12, vector22, vector32, wynik2));
 	glNormal3f(0, 1, 0);
@@ -322,10 +349,10 @@ void GLUTWindow::rysujNiebo(){
 	glTexCoord2f(0.0f, 0.0f);
 
 
-	float vector14[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1 + odleglosc };
-	float vector24[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f, terrain_size*0.1 + odleglosc };
-	float vector34[3] = { terrain_size*0.1 + odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f, terrain_size*0.1 + odleglosc };
-	float vector44[3] = { 0.0 - odleglosc, minimalnaWysokosc*0.1f + terrain_size*0.1f, terrain_size*0.1 + odleglosc };
+	float vector14[3] = { 0.0 - odleglosc, obnizenie, terrain_size*terrain_scale + odleglosc };
+	float vector24[3] = { terrain_size*terrain_scale + odleglosc, obnizenie, terrain_size*terrain_scale + odleglosc };
+	float vector34[3] = { terrain_size*terrain_scale + odleglosc, obnizenie + terrain_size*terrain_scale, terrain_size*terrain_scale + odleglosc };
+	float vector44[3] = { 0.0 - odleglosc, obnizenie + terrain_size*terrain_scale, terrain_size*terrain_scale + odleglosc };
 	float wynik4[3];
 	glNormal3fv(operacjeNaWektorach->jednostkowyWektorNormalny3fv(vector14, vector24, vector34, wynik4));
 	glNormal3f(0, 1, 0);
@@ -344,7 +371,7 @@ void GLUTWindow::rysujNiebo(){
 	glVertex3fv(vector44);
 	glTexCoord2f(0.0f, 0.0f);
 
-
+	glEnd();
 }
 
 void GLUTWindow::renderScene() {
@@ -362,18 +389,18 @@ void GLUTWindow::renderScene() {
 	//WODA! XD
 	//glColor3f(0.0f, 0.0f, 0.5f);
 	//glBegin(GL_QUADS);
-	//	glVertex3f(0.0f, minimalnaWysokosc*0.1f + 0.3, 0.0f);
-	//	glVertex3f(0.0f, minimalnaWysokosc*0.1f + 0.3, terrain_size*0.1f);
-	//	glVertex3f(terrain_size*0.1f, minimalnaWysokosc*0.1f + 0.3, terrain_size*0.1f);
-	//	glVertex3f(terrain_size*0.1f, minimalnaWysokosc*0.1f + 0.3, 0.0f);
+	//	glVertex3f(0.0f, WysokoscMIN*0.1f + 0.3, 0.0f);
+	//	glVertex3f(0.0f, WysokoscMIN*0.1f + 0.3, terrain_size*0.1f);
+	//	glVertex3f(terrain_size*0.1f, WysokoscMIN*0.1f + 0.3, terrain_size*0.1f);
+	//	glVertex3f(terrain_size*0.1f, WysokoscMIN*0.1f + 0.3, 0.0f);
 	//glEnd();
 	
 
 	rysujNiebo();
 	glShadeModel(GL_SMOOTH);
 	glColor3f(0.1f, 0.6f, 0.1f);
-	renderTerrain(2);
-
+	renderTerrain(1);
+	river->RenderRiver(terrain);
 	glShadeModel(GL_FLAT);
 	systemDrzew->Rysuj();
 	glColor3f(0.1f, 0.6f, 0.1f);
@@ -523,8 +550,8 @@ void GLUTWindow::smootherTerrain(unsigned int type) {
 		}
 		break;
 	}
-
 }
+
 
 void timer_func(int n)
 {
@@ -541,6 +568,24 @@ void GLUTWindow::init() {
 		generateTerrain(1000, 1, 0.4f);
 		
 	smootherTerrain(0);
+	WysokoscMIN = terrain[0][0];
+	WysokoscMAX = terrain[0][0];
+	for (int i = 0; i < terrain_size; i++) {
+		for (int j = 0; j < terrain_size; j++) {
+			if (WysokoscMIN > terrain[i][j]) {
+				WysokoscMIN = terrain[i][j];
+				MIN_X = i;
+				MIN_Z = j;
+			}
+			if (WysokoscMAX < terrain[i][j]) {
+				WysokoscMAX = terrain[i][j];
+				MAX_X = i;
+				MAX_Z = j;
+			}
+		}
+	}
+	river = new River(WysokoscMIN, WysokoscMAX, MIN_X, MIN_Z, MAX_X, MAX_Z);
+	river->CreateRiver(terrain);
 	printTerrain();
 	glutInit(argc, argv);
 	//glew///////
@@ -572,19 +617,10 @@ void GLUTWindow::init() {
 	glutIgnoreKeyRepeat(1);
 
 	Tekstury::init();
-	systemDrzew->generuj(terrain);
-	systemMniejszejRoslinnosci->generuj(terrain);
+	systemDrzew->generuj(terrain, river->RiverMask);
+	systemMniejszejRoslinnosci->generuj(terrain,river->RiverMask);
 
 	shader = new Shader("Data/shaders/shader.vs", "Data/shaders/shader.frag");
-	minimalnaWysokosc = terrain[0][0];
-	for (int i = 0; i < 150; i++) {
-		for (int j = 0; j < 150; j++) {
-			if (minimalnaWysokosc > terrain[i][j]) {
-				minimalnaWysokosc = terrain[i][j];
-			}
-		}
-	}
-	
 	//glutPostRedisplay();
 	glutMainLoop();
 }
